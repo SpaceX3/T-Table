@@ -26,9 +26,6 @@ inline void pre(){
 		}
 	}
 }
-struct node{
-	int num,d;
-}now;
 signed main(){
 	scanf("%lld %lld",&n,&m);
 	memset(dis,-1,sizeof(dis));
@@ -41,7 +38,9 @@ signed main(){
 			ans=0;
 			for(int k=1;k<=n;k++)if(dis[i][k]!=-1 && dis[k][j]!=-1 && dis[i][k]+dis[k][j]==dis[i][j]){
 				for(int l=k+1;l<=n;l++)if(dis[i][l]!=-1 && dis[l][j]!=-1 && dis[i][l]+dis[l][j]==dis[i][j]){
-					if(len[k][l]!=-1 && dis[i][k]+len[k][l]==dis[i][l])ans+=value[k][l];
+					if(len[k][l]!=-1 && (dis[i][k]+len[k][l]==dis[i][l] || dis[i][l]+len[l][k]==dis[i][k])){    //可能会少写一个条件
+						ans+=value[k][l];
+					}
 				}
 			}
 			printf("%lld ",ans);
