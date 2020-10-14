@@ -75,7 +75,7 @@ $1->5->4->3$
 
 对于另外$10\%$的数据，保证$0\leq m\leq 10^3$
 
-对于$100\%$的数据，保证$2\leq n\leq 500$，$0\leq m\leq \frac{n\times(n-1)}{2}$，$1\leq len,value\leq 10^6$
+对于$100\%$的数据，保证$2\leq n\leq 300$，$0\leq m\leq \frac{n\times(n-1)}{2}$，$1\leq len,value\leq 10^6$
 
 保证没有重边和自环
 
@@ -94,21 +94,22 @@ $100pts:$考虑优化上述解法，每次就不用枚举$n^2$条边：预处理
 ## STD
 
 ```cpp
+//O(n^3)写法
 #include <iostream>
 #include <cstdio>
 #include <cstring>
-#define int long long
+#include <ctime>
+#define LL long long
 using namespace std;
-const int MAX=5e2+5;
-const int inf=1061109567;
+const int MAX=3e2+5;
 int n,m;
-int len[MAX][MAX],value[MAX][MAX];
-int dis[MAX][MAX],cnt[MAX][MAX];
+LL len[MAX][MAX],value[MAX][MAX];
+LL dis[MAX][MAX],cnt[MAX][MAX];
 inline void pre(){
 	for(int k=1;k<=n;k++){
-		for(int i=1;i<=n;i++){
-			for(int j=1;j<=n;j++)if(dis[i][k]!=-1 && dis[k][j]!=-1){
-				if(dis[i][j]==-1 || dis[i][j]>dis[i][k]+dis[k][j])dis[i][j]=dis[i][k]+dis[k][j];
+		for(int i=1;i<=n;i++)if(dis[i][k]!=-1){
+			for(int j=i+1;j<=n;j++)if(dis[k][j]!=-1){
+				if(dis[i][j]==-1 || dis[i][j]>dis[i][k]+dis[k][j])dis[j][i]=dis[i][j]=dis[i][k]+dis[k][j];
 			}
 		}
 	}
@@ -118,15 +119,16 @@ inline void pre(){
 		}
 	}
 }
+LL ans;
 signed main(){
-	scanf("%lld %lld",&n,&m);
+	scanf("%d %d",&n,&m);
 	memset(dis,-1,sizeof(dis));
-	for(int x,y,i=1;i<=m;i++)scanf("%lld %lld",&x,&y),scanf("%lld %lld",&dis[x][y],&value[x][y]),dis[y][x]=dis[x][y],value[y][x]=value[x][y];
+	for(int x,y,i=1;i<=m;i++)scanf("%d %d",&x,&y),scanf("%lld %lld",&dis[x][y],&value[x][y]),dis[y][x]=dis[x][y],value[y][x]=value[x][y];
 	for(int i=1;i<=n;i++)dis[i][i]=0;
 	memcpy(len,dis,sizeof(dis));
 	pre();
 	for(int i=1;i<=n;i++){
-		for(int ans,j=i+1;j<=n;j++){
+		for(int j=i+1;j<=n;j++){
 			ans=0;
 			for(int k=1;k<=n;k++)if(dis[i][k]+dis[k][j]==dis[i][j])ans+=cnt[i][k];
 			printf("%lld ",ans);
